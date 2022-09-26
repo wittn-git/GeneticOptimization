@@ -1,7 +1,9 @@
 #include <string>
 
-enum operator_type { E, LE, GE };
-static const char *operator_type_str[] = { "E", "LE", "GE" };
+enum comparer_type { E, LE, GE };
+static const char *comparer_type_str[] = { "=", "<=", ">=" };
+enum operator_type { P, M };
+static const char *operator_type_str[] = { "+", "-" };
 
 class Node {
     public:
@@ -24,9 +26,9 @@ class NumericalNode : public Node {
     int value;
 };
 
-class TermNode : public Node {
+class AtomNode : public Node {
     public:
-    TermNode(IdentifierNode identfier, NumericalNode numerical);
+    AtomNode(IdentifierNode identfier, NumericalNode numerical);
     virtual std::string to_string();
     private:
     IdentifierNode identifier;
@@ -35,10 +37,20 @@ class TermNode : public Node {
 
 class EquationNode : public Node {
     public:
-    EquationNode(TermNode term_1, TermNode term_2, operator_type op);
+    EquationNode(AtomNode term_1, AtomNode term_2, comparer_type cp);
     virtual std::string to_string();
     private:
-    TermNode term_1;
-    TermNode term_2;
+    AtomNode term_1;
+    AtomNode term_2;
+    comparer_type cp;
+};
+
+class OperationNode : public Node {
+    public:
+    OperationNode(AtomNode term_1, AtomNode term_2, operator_type op);
+    virtual std::string to_string();
+    private:
+    AtomNode term_1;
+    AtomNode term_2;
     operator_type op;
 };

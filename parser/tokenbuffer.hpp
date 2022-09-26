@@ -4,7 +4,7 @@
 class Tokenbuffer{
 
     public:
-    Tokenbuffer(Lexer lexer);
+    Tokenbuffer(Lexer *lexer);
     Token current();
     Token next();
     void consume();
@@ -12,6 +12,6 @@ class Tokenbuffer{
     bool hasNext();
 
     private:
-    Lexer lexer;
+    Lexer* lexer;
     std::list<Token> tokens;
 };

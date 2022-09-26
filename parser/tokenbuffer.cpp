@@ -1,13 +1,13 @@
 #include "tokenbuffer.hpp"
 
-Tokenbuffer::Tokenbuffer(Lexer lexer) : lexer(lexer) {};
+Tokenbuffer::Tokenbuffer(Lexer* lexer) : lexer(lexer) {};
 
 Token Tokenbuffer::current(){
     return tokens.back();
 }
 
 Token Tokenbuffer::next(){
-    tokens.emplace_back(lexer.nextToken());
+    tokens.emplace_back(lexer->nextToken());
     return current();
 }
 
@@ -17,11 +17,11 @@ void Tokenbuffer::consume(){
 
 void Tokenbuffer::backtrack(){
     if(!tokens.empty()){
-        lexer.backtrack((tokens.back()).value.length());
+        lexer->backtrack((tokens.back()).value.length());
         tokens.erase(--tokens.end());
     }
 }
 
 bool Tokenbuffer::hasNext(){
-    return lexer.hasNextToken();
+    return lexer->hasNextToken();
 }

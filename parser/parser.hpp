@@ -6,7 +6,6 @@
 class Parser{
 
     public:
-    Parser();
     Program parse(std::string input);
     
     private:
@@ -16,14 +15,16 @@ class Parser{
     bool matchToken(token_type type);
     bool matchKeyword(std::string keyword);
     bool matchProgram();
+    bool matchOperation();
+    bool matchAtom();
     bool matchTerm();
     bool matchEquation();
     bool matchIdentifier();
     bool matchNumber();
 
-    Tokenbuffer tokenbuffer;
+    Tokenbuffer* tokenbuffer;
 
-    std::variant<EquationNode, TermNode, IdentifierNode, NumericalNode> nodeResult;
-    Program programResult;
+    std::variant<std::monostate, OperationNode, EquationNode, AtomNode, IdentifierNode, NumericalNode> nodeResult;
+    Program* programResult;
 
 };

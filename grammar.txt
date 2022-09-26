@@ -1,0 +1,8 @@
+P -> objective:T;constraints:S;
+S -> E;S | E;
+E -> T=T | T>=T | T<=T
+T -> O | A
+O -> A+A | A-A
+A -> NI
+I -> {any identifier}
+N -> {any numerical}

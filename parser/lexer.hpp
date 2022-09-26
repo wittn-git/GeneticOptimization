@@ -24,7 +24,9 @@ class Lexer{
         {";", SEMICOLON},
         {"<=", LESSEQUAL},
         {"=", EQUAL},
-        {">=", GREATEREQUAL}
+        {">=", GREATEREQUAL},
+        {"+", PLUS},
+        {"-", MINUS}
     };
 
 };
