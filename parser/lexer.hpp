@@ -1,21 +1,30 @@
 #include <string>
 #include <map>
 #include <regex>
+#include <vector>
 #include "token.hpp"
 
 class Lexer{
 
     public:
     Lexer(std::string input);
-    Token getNextToken();
+    Token nextToken();
     bool hasNextToken();
+    void backtrack(int positions);
 
     private:
     std::string input;
-    std::string slicedInput;
+    int cursor = 0;
+    static std::string getKeywordregex();
     std::map<std::string, token_type> specs = {
-        {"^\\d+", NUMERICAL},
-        {"^[a-zA-Z]+", IDENTIFIER}
+        {getKeywordregex(), KEYWORD},
+        {"\\d+", NUMERICAL},
+        {"(?!"+getKeywordregex()+")[a-zA-Z]+", IDENTIFIER},
+        {":", COLON},
+        {";", SEMICOLON},
+        {"<=", LESSEQUAL},
+        {"=", EQUAL},
+        {">=", GREATEREQUAL}
     };
 
 };

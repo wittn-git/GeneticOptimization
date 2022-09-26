@@ -1,29 +1,43 @@
 #include "lexer.hpp"
-#include <iostream>
 
-Lexer::Lexer(std::string input) : input(input), slicedInput(input) {};
+Lexer::Lexer(std::string input) : input(input) {};
 
-Token Lexer::getNextToken(){
+Token Lexer::nextToken(){
     if(!hasNextToken()){
         throw std::invalid_argument("No more tokens to parse.");
     }
-    while(std::regex_match (slicedInput, std::regex("^\\s"))){
+    std::string slicedInput = input.substr(cursor);
+    while(std::regex_search(slicedInput, std::regex("^\\s"))){
         slicedInput = slicedInput.substr(1);
+        cursor++;
     }
     for(auto it = specs.begin(); it != specs.end(); it++){
         std::smatch match;
-        std::regex_search (slicedInput, match, std::regex(it->first));
+        std::regex_search(slicedInput, match, std::regex("^" + it->first));
         if (match.size() > 0){
             std::string matched_string = match[0];
-            slicedInput = slicedInput.substr(matched_string.length());
+            cursor += matched_string.length();
             return { it->second, matched_string };
         }
     }
     Token token = { ERROR, slicedInput.substr(0,1) };
-    slicedInput = slicedInput.substr(1);
+    cursor++;
     return token;
 }
 
 bool Lexer::hasNextToken(){
-    return slicedInput.length() != 0;
+    return cursor != input.length();
+}
+
+void Lexer::backtrack(int positions){
+    cursor -= positions;
+}
+
+std::string Lexer::getKeywordregex(){
+    std::string regex;
+    for(int i=0; i<sizeof(keywords)/sizeof(keywords[0]); i++){
+        if(i != 0) regex += "|";
+        regex += keywords[i];
+    }
+    return regex;
 }
