@@ -1,8 +1,8 @@
 #include "parser.hpp"
 
-Parser::Parser() : tokenbuffer(Lexer("")), nodeResult(Node()) {};
+Parser::Parser() : tokenbuffer(Lexer("")) {};
 
-Program* Parser::parse(std::string input){
+Program Parser::parse(std::string input){
     Lexer lexer(input);
     this->tokenbuffer = Tokenbuffer(lexer);
     if(matchProgram()){
@@ -21,18 +21,22 @@ bool Parser::reject(){
 }
 
 bool Parser::matchToken(token_type type){
-    Token token = tokenbuffer.next();
-    if(token.type = type){
-        return accept();
+    if(tokenbuffer.hasNext()){
+        Token token = tokenbuffer.next();
+        if(token.type = type){
+            return accept();
+        }
     }
     return reject();
 }
 
 bool Parser::matchKeyword(std::string keyword){
-    Token token = tokenbuffer.next();
-    if(token.type == KEYWORD && token.value == keyword){
-        return accept();
-    }
+    if(tokenbuffer.hasNext()){
+        Token token = tokenbuffer.next();
+        if(token.type == KEYWORD && token.value == keyword){
+            return accept();
+        }
+    }   
     return reject();
 }
 
@@ -45,20 +49,19 @@ bool Parser::matchKeyword(std::string keyword){
 */
 
 bool Parser::matchProgram(){
-    if(!matchKeyword("objective")) reject();
-    if(!matchToken(COLON)) reject();
-    if(!matchTerm()) reject();
+    if(!matchKeyword("objective")) return reject();
+    if(!matchToken(COLON)) return reject();
+    if(!matchTerm()) return reject();
     TermNode objective = std::get<TermNode>(nodeResult);
-    if(!matchToken(SEMICOLON)) reject();
-    if(!matchKeyword("constraints")) reject();
-    if(!matchToken(COLON)) reject();
+    if(!matchToken(SEMICOLON)) return reject();
+    if(!matchKeyword("constraints")) return reject();
+    if(!matchToken(COLON)) return reject();
     std::list<EquationNode> constraints;
     while(matchEquation()){
-        constraints.emplace_back(nodeResult);
-        if(!matchToken(SEMICOLON)) reject();
+        constraints.emplace_back(std::get<EquationNode>(nodeResult));
+        if(!matchToken(SEMICOLON)) return reject();
     }
-    if(!matchToken(SEMICOLON)) reject();
-    programResult = &Program(objective, constraints);
+    programResult = Program(objective, constraints);
     return accept();
 }
 
@@ -69,9 +72,9 @@ bool Parser::matchProgram(){
 */
 
 bool Parser::matchTerm(){
-    if(!matchNumber()) reject();
+    if(!matchNumber()) return reject();
     NumericalNode numerical = std::get<NumericalNode>(nodeResult);
-    if(!matchIdentifier()) reject();
+    if(!matchIdentifier()) return reject();
     IdentifierNode identifer = std::get<IdentifierNode>(nodeResult);
     nodeResult = TermNode(identifer, numerical);
     return accept();
@@ -86,21 +89,16 @@ bool Parser::matchTerm(){
 */
 
 bool Parser::matchEquation(){
-    if(!matchTerm()) reject();
+    if(!matchTerm()) return reject();
     TermNode term_1 = std::get<TermNode>(nodeResult);;
     operator_type op;
-    if(!matchToken(LESSEQUAL)){
-        op = LE;
-    }else if(!matchToken(EQUAL)){
-        op = E;
-    }else if(!matchToken(GREATEREQUAL)){
-        op = GE;
-    }else{
-        reject();
-    }
-    if(!matchTerm()) reject();
+    if(matchToken(LESSEQUAL)) op = LE;
+    else if(matchToken(EQUAL)) op = E;
+    else if(matchToken(GREATEREQUAL)) op = GE;
+    else return reject();
+    if(!matchTerm()) return reject();
     TermNode term_2 =  std::get<TermNode>(nodeResult);
-    EquationNode equation(term_1, term_2, op);
+    nodeResult = EquationNode(term_1, term_2, op);
     return accept();
 }
 
@@ -110,10 +108,12 @@ bool Parser::matchEquation(){
         {any literal string}
 */
 bool Parser::matchIdentifier(){
-    Token token = tokenbuffer.next();
-    if(token.type == IDENTIFIER){
-        nodeResult = IdentifierNode(token.value);
-        return accept();
+    if(tokenbuffer.hasNext()){
+        Token token = tokenbuffer.next();
+        if(token.type == IDENTIFIER){
+            nodeResult = IdentifierNode(token.value);
+            return accept();
+        }
     }
     return reject();
 }
@@ -123,10 +123,12 @@ bool Parser::matchIdentifier(){
         {any integer}
 */
 bool Parser::matchNumber(){
-    Token token = tokenbuffer.next();
-    if(token.type == NUMERICAL){
-        nodeResult = NumericalNode(std::stoi(token.value));
-        return accept();
+    if(tokenbuffer.hasNext()){
+        Token token = tokenbuffer.next();
+        if(token.type == NUMERICAL){
+            nodeResult = NumericalNode(std::stoi(token.value));
+            return accept();
+        }
     }
     return reject();
 }

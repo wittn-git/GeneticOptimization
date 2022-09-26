@@ -7,7 +7,7 @@ class Parser{
 
     public:
     Parser();
-    Program* parse(std::string input);
+    Program parse(std::string input);
     
     private:
     bool accept();
@@ -23,7 +23,7 @@ class Parser{
 
     Tokenbuffer tokenbuffer;
 
-    std::variant<EquationNode, TermNode, IdentifierNode, NumericalNode, Node> nodeResult;
-    Program* programResult;
+    std::variant<EquationNode, TermNode, IdentifierNode, NumericalNode> nodeResult;
+    Program programResult;
 
 };

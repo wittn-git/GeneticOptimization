@@ -21,3 +21,7 @@ void Tokenbuffer::backtrack(){
         tokens.erase(--tokens.end());
     }
 }
+
+bool Tokenbuffer::hasNext(){
+    return lexer.hasNextToken();
+}

@@ -9,6 +9,7 @@ class Tokenbuffer{
     Token next();
     void consume();
     void backtrack();
+    bool hasNext();
 
     private:
     Lexer lexer;
