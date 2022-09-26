@@ -1,11 +1,13 @@
 #include <string>
+#include <variant>
 #include "tokenbuffer.hpp"
+#include "../structure/program.hpp"
 
 class Parser{
 
     public:
     Parser();
-    std::string parse(std::string input);
+    Program* parse(std::string input);
     
     private:
     bool accept();
@@ -14,10 +16,14 @@ class Parser{
     bool matchToken(token_type type);
     bool matchKeyword(std::string keyword);
     bool matchProgram();
+    bool matchTerm();
+    bool matchEquation();
     bool matchIdentifier();
     bool matchNumber();
 
     Tokenbuffer tokenbuffer;
-    std::string result;
+
+    std::variant<EquationNode, TermNode, IdentifierNode, NumericalNode, Node> nodeResult;
+    Program* programResult;
 
 };
