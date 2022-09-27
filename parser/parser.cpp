@@ -111,11 +111,11 @@ bool Parser::matchOperation(){
         return reject();
     }
     AtomNode* term_1 = get_variant<AtomNode>(nodeResult);
-    operator_type op;
+    operator_type operator_;
     if(matchToken(PLUS)){
-        op = P;
+        operator_ = P;
     }else if(matchToken(MINUS)){
-        op = M;
+        operator_ = M;
     }else{
         return reject();
     }
@@ -123,28 +123,24 @@ bool Parser::matchOperation(){
         return reject();
     }
     TermNode* term_2 = get_variant<TermNode>(nodeResult);
-    nodeResult = new OperationNode(term_1, term_2, op);
+    nodeResult = new OperationNode(term_1, term_2, operator_);
     return accept();
 }
 
 /*
     A:
+        I
+        N
         NI
 
 */
 
 bool Parser::matchAtom(){
     init();
-    if(!matchNumber()){
-        return reject();
+    if(matchConcat() || matchNumber() || matchIdentifier()){
+        return accept();
     }
-    NumericalNode* numerical = get_variant<NumericalNode>(nodeResult);
-    if(!matchIdentifier()){
-        return reject();
-    }
-    IdentifierNode* identifer = get_variant<IdentifierNode>(nodeResult);
-    nodeResult = new AtomNode(identifer, numerical);
-    return accept();
+    return reject();
 }
 
 /*
@@ -161,13 +157,13 @@ bool Parser::matchEquation(){
         return reject();
     }
     TermNode* term_1 = get_variant<TermNode>(nodeResult);
-    comparer_type cp;
+    comparator_type comparator_;
     if(matchToken(LESSEQUAL)){
-        cp = LE;
+        comparator_ = LE;
     }else if(matchToken(EQUAL)){
-        cp = E;
+        comparator_ = E;
     }else if(matchToken(GREATEREQUAL)){
-        cp = GE;
+        comparator_ = GE;
     }else{
         return reject();
     }
@@ -175,7 +171,7 @@ bool Parser::matchEquation(){
         return reject();
     }
     TermNode* term_2 = get_variant<TermNode>(nodeResult);
-    nodeResult = new EquationNode(term_1, term_2, cp);
+    nodeResult = new EquationNode(term_1, term_2, comparator_);
     return accept();
 }
 
@@ -207,6 +203,29 @@ bool Parser::matchNumber(){
         if(token.type == NUMERICAL){
             nodeResult = new NumericalNode(std::stoi(token.value));
             return accept();
+        }
+    }
+    return reject();
+}
+
+/*
+    C:
+        {any concat}
+*/
+bool Parser::matchConcat(){
+    init();
+    if(tokenbuffer->hasNext()){
+        Token token = tokenbuffer->next();
+        if(token.type == NUMERICAL){
+            int value = std::stoi(token.value);
+            if(tokenbuffer->hasNext()){
+                Token token = tokenbuffer->next();
+                if(token.type == IDENTIFIER){
+                    std::string name = token.value;
+                    nodeResult = new ConcatNode(value, name);
+                    return accept();
+                }
+            }
         }
     }
     return reject();

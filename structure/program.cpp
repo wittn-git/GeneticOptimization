@@ -12,3 +12,11 @@ std::string Program::to_string(){
     }
     return program_string;
 }
+
+TermNode* Program::getObjective(){
+    return objective;
+}
+
+std::list<EquationNode*> Program::getConstraints(){
+    return constraints;
+}

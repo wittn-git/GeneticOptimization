@@ -22,10 +22,11 @@ class Parser{
         bool matchEquation();
         bool matchIdentifier();
         bool matchNumber();
+        bool matchConcat();
 
         Tokenbuffer* tokenbuffer;
 
-        std::variant<OperationNode*, EquationNode*, AtomNode*, IdentifierNode*, NumericalNode*> nodeResult;
+        std::variant<OperationNode*, EquationNode*, ConcatNode*, IdentifierNode*, NumericalNode*> nodeResult;
         Program* programResult;
 
 };
