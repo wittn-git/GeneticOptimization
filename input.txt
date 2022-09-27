@@ -1,0 +1,6 @@
+objective:
+x+y;
+
+constraints:
+x+y <= 10;
+2x-y >= 3;
