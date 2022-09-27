@@ -8,7 +8,12 @@ Program Parser::parse(std::string input){
     throw std::invalid_argument("Syntax error.");
 }
 
+void Parser::init(){
+    tokenbuffer->mark();
+}
+
 bool Parser::accept(){
+    tokenbuffer->unmark();
     return true;
 }
 
@@ -18,6 +23,7 @@ bool Parser::reject(){
 }
 
 bool Parser::matchToken(token_type type){
+    init();
     if(tokenbuffer->hasNext()){
         Token token = tokenbuffer->next();
         if(token.type == type){
@@ -28,6 +34,7 @@ bool Parser::matchToken(token_type type){
 }
 
 bool Parser::matchKeyword(std::string keyword){
+    init();
     if(tokenbuffer->hasNext()){
         Token token = tokenbuffer->next();
         if(token.type == KEYWORD && token.value == keyword){
@@ -46,16 +53,29 @@ bool Parser::matchKeyword(std::string keyword){
 */
 
 bool Parser::matchProgram(){
-    if(!matchKeyword("objective")) return reject();
-    if(!matchToken(COLON)) return reject();
-    if(!matchTerm()) return reject();
-    std::variant<AtomNode, OperationNode> objective = std::get<std::variant<AtomNode, OperationNode>>(nodeResult);
-    if(!matchToken(SEMICOLON)) return reject();
-    if(!matchKeyword("constraints")) return reject();
-    if(!matchToken(COLON)) return reject();
-    std::list<EquationNode> constraints;
+    init();
+    if(!matchKeyword("objective")){
+        return reject();
+    }
+    if(!matchToken(COLON)){
+        return reject();
+    }
+    if(!matchTerm()){
+        return reject();
+    }
+    TermNode* objective = get_variant<TermNode>(nodeResult);
+    if(!matchToken(SEMICOLON)){
+        return reject();
+    }
+    if(!matchKeyword("constraints")){
+        return reject();
+    }
+    if(!matchToken(COLON)){
+        return reject();
+    }
+    std::list<EquationNode*> constraints;
     while(matchEquation()){
-        constraints.emplace_back(std::get<EquationNode>(nodeResult));
+        constraints.emplace_back(get_variant<EquationNode>(nodeResult));
         if(!matchToken(SEMICOLON)) return reject();
     }
     programResult = new Program(objective, constraints);
@@ -70,8 +90,9 @@ bool Parser::matchProgram(){
 */
 
 bool Parser::matchTerm(){
+    init();
     if(matchOperation() || matchAtom()){
-        accept();
+        return accept();
     }
     return reject();
 }
@@ -85,16 +106,25 @@ bool Parser::matchTerm(){
 */
 
 bool Parser::matchOperation(){
-    if(!matchAtom()) reject();
-    AtomNode atom_1 = std::get<AtomNode>(nodeResult);
+    init();
+    if(!matchAtom()){
+        return reject();
+    }
+    AtomNode* term_1 = get_variant<AtomNode>(nodeResult);
     operator_type op;
-    if(matchToken(PLUS)) op = P;
-    else if(matchToken(MINUS)) op = M;
-    else reject();
-    if(!matchAtom()) reject();
-    AtomNode atom_2 = std::get<AtomNode>(nodeResult);
-    nodeResult = OperationNode(atom_1, atom_2, op);
-    accept();
+    if(matchToken(PLUS)){
+        op = P;
+    }else if(matchToken(MINUS)){
+        op = M;
+    }else{
+        return reject();
+    }
+    if(!matchTerm()){
+        return reject();
+    }
+    TermNode* term_2 = get_variant<TermNode>(nodeResult);
+    nodeResult = new OperationNode(term_1, term_2, op);
+    return accept();
 }
 
 /*
@@ -104,12 +134,16 @@ bool Parser::matchOperation(){
 */
 
 bool Parser::matchAtom(){
-    if(!matchNumber()) return reject();
-    NumericalNode numerical = std::get<NumericalNode>(nodeResult);
-    if(!matchIdentifier()) return reject();
-    IdentifierNode identifer = std::get<IdentifierNode>(nodeResult);
-    AtomNode atom_1 = AtomNode(identifer, numerical);
-    operator_type op;
+    init();
+    if(!matchNumber()){
+        return reject();
+    }
+    NumericalNode* numerical = get_variant<NumericalNode>(nodeResult);
+    if(!matchIdentifier()){
+        return reject();
+    }
+    IdentifierNode* identifer = get_variant<IdentifierNode>(nodeResult);
+    nodeResult = new AtomNode(identifer, numerical);
     return accept();
 }
 
@@ -122,16 +156,26 @@ bool Parser::matchAtom(){
 */
 
 bool Parser::matchEquation(){
-    if(!matchTerm()) return reject();
-    AtomNode atom_1 = std::get<AtomNode>(nodeResult);
+    init();
+    if(!matchTerm()){
+        return reject();
+    }
+    TermNode* term_1 = get_variant<TermNode>(nodeResult);
     comparer_type cp;
-    if(matchToken(LESSEQUAL)) cp = LE;
-    else if(matchToken(EQUAL)) cp = E;
-    else if(matchToken(GREATEREQUAL)) cp = GE;
-    else return reject();
-    if(!matchTerm()) return reject();
-    AtomNode atom_2 = std::get<AtomNode>(nodeResult);
-    nodeResult = EquationNode(atom_1, atom_2, cp);
+    if(matchToken(LESSEQUAL)){
+        cp = LE;
+    }else if(matchToken(EQUAL)){
+        cp = E;
+    }else if(matchToken(GREATEREQUAL)){
+        cp = GE;
+    }else{
+        return reject();
+    }
+    if(!matchTerm()){
+        return reject();
+    }
+    TermNode* term_2 = get_variant<TermNode>(nodeResult);
+    nodeResult = new EquationNode(term_1, term_2, cp);
     return accept();
 }
 
@@ -141,10 +185,11 @@ bool Parser::matchEquation(){
         {any literal string}
 */
 bool Parser::matchIdentifier(){
+    init();
     if(tokenbuffer->hasNext()){
         Token token = tokenbuffer->next();
         if(token.type == IDENTIFIER){
-            nodeResult = IdentifierNode(token.value);
+            nodeResult = new IdentifierNode(token.value);
             return accept();
         }
     }
@@ -156,10 +201,11 @@ bool Parser::matchIdentifier(){
         {any integer}
 */
 bool Parser::matchNumber(){
+    init();
     if(tokenbuffer->hasNext()){
         Token token = tokenbuffer->next();
         if(token.type == NUMERICAL){
-            nodeResult = NumericalNode(std::stoi(token.value));
+            nodeResult = new NumericalNode(std::stoi(token.value));
             return accept();
         }
     }

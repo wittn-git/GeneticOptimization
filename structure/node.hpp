@@ -7,50 +7,55 @@ static const char *operator_type_str[] = { "+", "-" };
 
 class Node {
     public:
-    virtual std::string to_string() = 0;
+        virtual std::string to_string() = 0;
 };
 
 class IdentifierNode : public Node {
     public:
-    IdentifierNode(std::string name);
-    virtual std::string to_string();
+        IdentifierNode(std::string name);
+        std::string to_string() override;
     private:
-    std::string name;
+        std::string name;
 };
 
 class NumericalNode : public Node {
     public:
-    NumericalNode(int value);
-    virtual std::string to_string();
+        NumericalNode(int value);
+        std::string to_string() override;
     private:
-    int value;
+        int value;
 };
 
-class AtomNode : public Node {
+class TermNode : public Node {
     public:
-    AtomNode(IdentifierNode identfier, NumericalNode numerical);
-    virtual std::string to_string();
+        virtual std::string to_string() = 0;
+};
+
+class AtomNode : public TermNode {
+    public:
+        AtomNode(IdentifierNode* identfier, NumericalNode* numerical);
+        std::string to_string() override;
     private:
-    IdentifierNode identifier;
-    NumericalNode numerical;
+        IdentifierNode* identifier;
+        NumericalNode* numerical;
 };
 
 class EquationNode : public Node {
     public:
-    EquationNode(AtomNode term_1, AtomNode term_2, comparer_type cp);
-    virtual std::string to_string();
+        EquationNode(TermNode* term_1, TermNode* term_2, comparer_type cp);
+        std::string to_string() override;
     private:
-    AtomNode term_1;
-    AtomNode term_2;
-    comparer_type cp;
+        TermNode* term_1;
+        TermNode* term_2;
+        comparer_type cp;
 };
 
-class OperationNode : public Node {
+class OperationNode : public TermNode {
     public:
-    OperationNode(AtomNode term_1, AtomNode term_2, operator_type op);
-    virtual std::string to_string();
+        OperationNode(AtomNode* term_1, TermNode* term_2, operator_type op);
+        std::string to_string() override;
     private:
-    AtomNode term_1;
-    AtomNode term_2;
-    operator_type op;
+        AtomNode* term_1;
+        TermNode* term_2;
+        operator_type op;
 };

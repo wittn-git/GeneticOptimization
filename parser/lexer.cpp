@@ -30,7 +30,11 @@ bool Lexer::hasNextToken(){
 }
 
 void Lexer::backtrack(int positions){
-    cursor -= positions;
+    cursor = positions;
+}
+
+int Lexer::getCursor(){
+    return cursor;
 }
 
 std::string Lexer::getKeywordregex(){

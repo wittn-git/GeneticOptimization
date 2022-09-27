@@ -5,9 +5,9 @@
 
 class Program{
     public:
-    Program(std::variant<AtomNode, OperationNode> objective, std::list<EquationNode> constraints);
-    std::string to_string();
+        Program(TermNode* objective, std::list<EquationNode*> constraints);
+        std::string to_string();
     private:
-    std::variant<AtomNode, OperationNode> objective;
-    std::list<EquationNode> constraints;
+        TermNode* objective;
+        std::list<EquationNode*> constraints;
 };
