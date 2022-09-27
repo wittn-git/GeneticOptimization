@@ -8,9 +8,13 @@ class Lexer{
 
     public:
         Lexer(std::string input);
+        //returns next Token after cursor position
         Token nextToken();
+        //states if whole input has been lexed
         bool hasNextToken();
+        //restores cursor to given position
         void backtrack(int position);
+        //returns current cursor position
         int getCursor();
 
     private:
@@ -24,7 +28,7 @@ class Lexer{
             {":", COLON},
             {";", SEMICOLON},
             {"<=", LESSEQUAL},
-            {"=", EQUAL},
+            {"==", EQUAL},
             {">=", GREATEREQUAL},
             {"\\+", PLUS},
             {"-", MINUS}

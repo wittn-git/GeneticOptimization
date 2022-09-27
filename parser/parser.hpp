@@ -6,6 +6,7 @@
 class Parser{
 
     public:
+        //parses program from given input string
         Program parse(std::string input);
     
     private:
