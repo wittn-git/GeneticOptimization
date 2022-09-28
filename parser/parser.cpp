@@ -60,9 +60,12 @@ bool Parser::matchProgram(){
     if(!matchToken(COLON)){
         return reject();
     }
+    std::list<EquationNode*> constraints;
     std::map<std::string, Range> variables;
     while(matchDefinition()){
         variables[std::get<0>(definitionResult)] = std::get<1>(definitionResult); 
+        constraints.emplace_back(new EquationNode(new IdentifierNode(std::get<0>(definitionResult)), new NumericalNode(std::get<1>(definitionResult).min), GE));
+        constraints.emplace_back(new EquationNode(new IdentifierNode(std::get<0>(definitionResult)), new NumericalNode(std::get<1>(definitionResult).max), LE));
         if(!matchToken(SEMICOLON)) return reject();
     }
     if(!matchKeyword("objective")){
@@ -84,7 +87,6 @@ bool Parser::matchProgram(){
     if(!matchToken(COLON)){
         return reject();
     }
-    std::list<EquationNode*> constraints;
     while(matchEquation()){
         constraints.emplace_back(get_variant<EquationNode>(nodeResult));
         if(!matchToken(SEMICOLON)) return reject();

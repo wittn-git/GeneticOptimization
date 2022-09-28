@@ -3,7 +3,7 @@
 #include "util/file_util.hpp"
 #include "genetics/population.hpp"
 
-#define epoches 100
+#define epoches 200
 #define populationsize 100
 #define mutationrate 0.05
 #define mutationrange 1

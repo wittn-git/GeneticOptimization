@@ -15,10 +15,6 @@ Program::Program(std::map<std::string, Range> variables, TermNode* objective, st
 
 std::string Program::to_string(){
     std::string program_string;
-    program_string += "definitions:\n";
-     for(auto it = variables.begin(); it != variables.end(); it++){
-        program_string += (*it).first + ":[" + std::to_string((*it).second.min) + "," + std::to_string((*it).second.max) +"];\n";
-    }
     program_string += "objective:\n";
     program_string += objective->to_string() + "\n";
     program_string += "constraints:\n";

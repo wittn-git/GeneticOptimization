@@ -13,10 +13,13 @@ std::tuple<bool, double> EquationNode::eval(std::map<std::string, double> values
     switch (comparator_){
     case E:
         fulfilled = term_1_value == term_2_value;
+        break;
     case GE:
         fulfilled = term_1_value >= term_2_value;
+        break;
     case LE:
         fulfilled = term_1_value <= term_2_value;
+        break;
     }
     return {fulfilled, abs(term_1_value - term_2_value)};
 }

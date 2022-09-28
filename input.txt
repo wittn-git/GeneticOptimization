@@ -1,9 +1,9 @@
 definitions:
-x: [0,1];
-y: [0, 5];
+x: [0,5];
+y: [0,5];
 
 objective:
 x+y;
 
 constraints:
-x+y <= 10;
+x+y <= 6;
