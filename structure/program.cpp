@@ -1,10 +1,15 @@
 #include "program.hpp"
 
-Program::Program(TermNode* objective, std::list<EquationNode*> constraints) : objective(objective), constraints(constraints) {
-    variableNames = objective->getVariables();
+Program::Program(std::map<std::string, Range> variables, TermNode* objective, std::list<EquationNode*> constraints) : variables(variables), objective(objective), constraints(constraints) {
+    std::set<std::string> variableNames = objective->getVariables();
     for(auto it = constraints.begin(); it != constraints.end(); ++it){
         std::set<std::string> v2 = (*it)->getVariables();
         variableNames.insert(v2.begin(), v2.end());
+    }
+    for(auto it = variables.begin(); it != variables.end(); ++it){
+        if (!variableNames.count(std::get<0>(*it))) {
+            throw std::invalid_argument("Used undefined variable in program.");
+        }
     }
 };
 
@@ -27,6 +32,6 @@ std::list<EquationNode*> Program::getConstraints(){
     return constraints;
 }
 
-std::set<std::string> Program::getVariableNames(){
-    return variableNames;
+std::map<std::string, Range> Program::getVariables(){
+    return variables;
 }

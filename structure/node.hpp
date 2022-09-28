@@ -10,6 +10,10 @@ static const char *comparator_type_str[] = { "=", "<=", ">=" };
 enum operator_type { P, M };
 static const char *operator_type_str[] = { "+", "-" };
 
+struct Range{
+    double min, max;
+};
+
 class Node {
     public:
         virtual std::string to_string() = 0;
@@ -60,18 +64,20 @@ class IdentifierNode : public AtomNode {
         std::string to_string() override;
         double eval(std::map<std::string, double> values) override;
         std::set<std::string> getVariables() override;
+        std::string getName();
     private:
         std::string name;
 };
 
 class NumericalNode : public AtomNode {
     public:
-        NumericalNode(int value);
+        NumericalNode(double value);
         std::string to_string() override;
         double eval(std::map<std::string, double> values) override;
         std::set<std::string> getVariables() override;
+        double getValue();
     private:
-        int value;
+        double value;
 };
 
 class ConcatNode : public AtomNode {

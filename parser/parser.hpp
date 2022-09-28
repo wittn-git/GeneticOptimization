@@ -18,6 +18,7 @@ class Parser{
         bool matchToken(token_type type);
         bool matchKeyword(std::string keyword);
         bool matchProgram();
+        bool matchDefinition();
         bool matchOperation();
         bool matchAtom();
         bool matchTerm();
@@ -29,6 +30,7 @@ class Parser{
         Tokenbuffer* tokenbuffer;
 
         std::variant<OperationNode*, EquationNode*, ConcatNode*, IdentifierNode*, NumericalNode*> nodeResult;
+        std::tuple<std::string, Range> definitionResult;
         Program* programResult;
 
 };

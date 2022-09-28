@@ -1,7 +1,7 @@
 #include "population.hpp"
 
 Population::Population(int size, Program* program, double mutationRate, double mutationRange) : size(size), program(program), mutationRate(mutationRate), mutationRange(mutationRange) {
-    std::set<std::string> variableNames = program->getVariableNames();
+    std::map<std::string, Range> variableNames = program->getVariables();
     for(int i=0; i<size; i++){
         agents.emplace_back(new Agent(variableNames));
     }

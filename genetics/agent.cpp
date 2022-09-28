@@ -1,8 +1,8 @@
 #include "agent.hpp"
 
-Agent::Agent(std::set<std::string> variableNames){
-    for(auto it = variableNames.begin(); it != variableNames.end(); it++){
-        values[*it] = 0;
+Agent::Agent(std::map<std::string, Range>  variables){
+    for(auto it = variables.begin(); it != variables.end(); it++){
+        values[(*it).first] = (*it).second.min;
     }
 }
 

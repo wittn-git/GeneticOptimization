@@ -6,8 +6,11 @@ In this project, I want to build tools to input an optimization problem as a tex
 
 ### Input format
 
-The input format for the optimization problem is pretty straight forward. It contains an maximizing objective and a number of equations functioning as constraints:
+The input format for the optimization problem is pretty straight forward. It contains definitions of used variabes, a maximizing objective and a number of equations functioning as constraints:
 ```
+definitions:
+x:[0,10];
+y:[0,6];
 objective:
 4x + y
 constraints:
@@ -17,13 +20,17 @@ y + x <= 10;
     .
     .
 ```
+In the following definitions, T is a Term, I is any identifier defined using alphabetic characters and N is an integer.
 
-Following types of equations are currently supported (whereas T is a Term):
+Following types of definitions are currently supported: 
+- I:[N,N]
+
+Following types of equations are currently supported:
 - T == T
 - T <= T
 - T >= T
 
-Following types of terms are currently supported (whereas T is a Term, I is any identifier defined using alphabetic characters and N is an integer):
+Following types of terms are currently supported:
 - T + T
 - T - T
 - I

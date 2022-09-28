@@ -1,4 +1,5 @@
-P -> objective:T;constraints:S;
+P -> definitions:D;objective:T;constraints:S;
+D -> I:[N,N];
 S -> E;S | E;
 E -> T=T | T>=T | T<=T
 T -> O | A

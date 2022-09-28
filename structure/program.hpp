@@ -6,13 +6,13 @@
 
 class Program{
     public:
-        Program(TermNode* objective, std::list<EquationNode*> constraints);
+        Program(std::map<std::string, Range> variables, TermNode* objective, std::list<EquationNode*> constraints);
         std::string to_string();
         TermNode* getObjective();
         std::list<EquationNode*> getConstraints();
-        std::set<std::string> getVariableNames();
+        std::map<std::string, Range> getVariables();
     private:
         TermNode* objective;
         std::list<EquationNode*> constraints;
-        std::set<std::string> variableNames;
+        std::map<std::string, Range> variables;
 };

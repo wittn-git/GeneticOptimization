@@ -1,3 +1,7 @@
+definitions:
+x: [0,1];
+y: [0, 5];
+
 objective:
 x+y;
 

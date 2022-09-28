@@ -32,7 +32,10 @@ class Lexer{
             {"==", EQUAL},
             {">=", GREATEREQUAL},
             {"\\+", PLUS},
-            {"-", MINUS}
+            {"-", MINUS},
+            {"\\[", LBRACKET},
+            {"\\]", RBRACKET},
+            {",", COMMA}
     };
 
 };

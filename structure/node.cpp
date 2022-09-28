@@ -65,7 +65,11 @@ std::set<std::string> IdentifierNode::getVariables(){
     return { name };
 }
 
-NumericalNode::NumericalNode(int value) : value(value) {};
+std::string IdentifierNode::getName(){
+    return name;
+}
+
+NumericalNode::NumericalNode(double value) : value(value) {};
 std::string NumericalNode::to_string(){
     return std::to_string(value);
 }
@@ -76,6 +80,10 @@ double NumericalNode::eval(std::map<std::string, double> values){
 
 std::set<std::string> NumericalNode::getVariables(){
     return { };
+}
+
+double NumericalNode::getValue(){
+    return value;
 }
 
 ConcatNode::ConcatNode(int value, std::string name) : value(value), name(name) {};

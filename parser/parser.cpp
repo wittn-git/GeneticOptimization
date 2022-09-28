@@ -46,7 +46,7 @@ bool Parser::matchKeyword(std::string keyword){
 
 /*
     P:
-        objective: T; constraints: S;
+        definitions: D; objective: T; constraints: S;
     S:
         E;S
         E;
@@ -54,6 +54,17 @@ bool Parser::matchKeyword(std::string keyword){
 
 bool Parser::matchProgram(){
     init();
+    if(!matchKeyword("definitions")){
+        return reject();
+    }
+    if(!matchToken(COLON)){
+        return reject();
+    }
+    std::map<std::string, Range> variables;
+    while(matchDefinition()){
+        variables[std::get<0>(definitionResult)] = std::get<1>(definitionResult); 
+        if(!matchToken(SEMICOLON)) return reject();
+    }
     if(!matchKeyword("objective")){
         return reject();
     }
@@ -78,7 +89,41 @@ bool Parser::matchProgram(){
         constraints.emplace_back(get_variant<EquationNode>(nodeResult));
         if(!matchToken(SEMICOLON)) return reject();
     }
-    programResult = new Program(objective, constraints);
+    programResult = new Program(variables, objective, constraints);
+    return accept();
+}
+
+/*
+    D: I:[N,N];
+*/
+
+bool Parser::matchDefinition(){
+    init();
+    if(!matchIdentifier()){
+        return reject();
+    }
+    IdentifierNode* identifier = get_variant<IdentifierNode>(nodeResult);
+     if(!matchToken(COLON)){
+        return reject();
+    }
+    if(!matchToken(LBRACKET)){
+        return reject();
+    }
+    if(!matchNumber()){
+        return reject();
+    }
+    NumericalNode* min = get_variant<NumericalNode>(nodeResult);
+    if(!matchToken(COMMA)){
+        return reject();
+    }
+    if(!matchNumber()){
+        return reject();
+    }
+    NumericalNode* max = get_variant<NumericalNode>(nodeResult);
+    if(!matchToken(RBRACKET)){
+        return reject();
+    }
+    definitionResult = { identifier->getName(), { min->getValue(), max->getValue() }};
     return accept();
 }
 

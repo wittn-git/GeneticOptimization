@@ -6,7 +6,7 @@
 
 class Agent{
     public:
-        Agent(std::set<std::string> variableNames);
+        Agent(std::map<std::string, Range> variables);
         Agent(std::map<std::string, double> values);
         Agent(Agent* agent, double mutationRate, double mutationRange);
         std::map<std::string, double> getValues();
