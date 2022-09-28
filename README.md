@@ -37,5 +37,12 @@ Following types of terms are currently supported:
 - N
 - IN
 
+#### Genetic algorithm
+
+After parsing the problem into a program structure, a genetic algorithm will be used to determine or approximate the optimal solution. For this a population of a given size containing agents will be created. Each of those agents will be initialized with the minimum values of each variable. In each generation, the fitness of these agents will be determine based on the following formula:
+```
+```
+After that, the best agent will be put in the next generation. The rest of the other population is based on the remaining agent; the higher the fitness of an agent, the higher the probability, that the agent will be put in the next generation. When an agent is put in the next generation, with a given mutation probability, its values will mutate in a given mutation range. The process is repeated for a given number of epoches.
+
 #### What's to come
-In the near future, the implementation of the genetic algorithm will follow. Stay tuned!
+In the near future, the implementation of the genetic algorithm will be improved and new types of optimization problems will be implemented. Stay tuned!
