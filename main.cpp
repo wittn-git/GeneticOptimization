@@ -8,8 +8,8 @@ int main(){
     std::string input = read_file("input.txt");
     Program prog = parser.parse(input);
     std::cout << "Parsed program:\n" << prog.to_string();
-    Population population(10, &prog, 1, 1);
-    for(int i=0; i<10; i++){
+    Population population(100, &prog, 0.05, 1);
+    for(int i=0; i<100; i++){
         population.update();
         std::map<std::string, double> best = population.getBest();
         std::cout << prog.getObjective()->eval(best) << "\n";

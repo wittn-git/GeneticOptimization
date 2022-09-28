@@ -86,7 +86,7 @@ double NumericalNode::getValue(){
     return value;
 }
 
-ConcatNode::ConcatNode(int value, std::string name) : value(value), name(name) {};
+ConcatNode::ConcatNode(double value, std::string name) : value(value), name(name) {};
 
 std::string ConcatNode::to_string() {
     return std::to_string(value) + name;

@@ -82,11 +82,11 @@ class NumericalNode : public AtomNode {
 
 class ConcatNode : public AtomNode {
     public:
-        ConcatNode(int value, std::string name);
+        ConcatNode(double value, std::string name);
         std::string to_string() override;
         double eval(std::map<std::string, double> values) override;
         std::set<std::string> getVariables() override;
     private:
-        int value;
+        double value;
         std::string name;
 };
