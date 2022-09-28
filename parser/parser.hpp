@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include "tokenbuffer.hpp"
 #include "../structure/program.hpp"

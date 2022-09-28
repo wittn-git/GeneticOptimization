@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <map>
 #include <regex>
@@ -23,7 +24,7 @@ class Lexer{
         static std::string getKeywordregex();
         std::map<std::string, token_type> specs = {
             {getKeywordregex(), KEYWORD},
-            {"\\d+", NUMERICAL},
+            {"-?\\d+", NUMERICAL},
             {"(?!"+getKeywordregex()+")[a-zA-Z]+", IDENTIFIER},
             {":", COLON},
             {";", SEMICOLON},

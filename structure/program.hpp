@@ -1,3 +1,4 @@
+#pragma once
 #include <list>
 #include <string>
 #include <variant>
@@ -9,7 +10,9 @@ class Program{
         std::string to_string();
         TermNode* getObjective();
         std::list<EquationNode*> getConstraints();
+        std::set<std::string> getVariableNames();
     private:
         TermNode* objective;
         std::list<EquationNode*> constraints;
+        std::set<std::string> variableNames;
 };

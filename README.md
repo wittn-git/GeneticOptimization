@@ -1,12 +1,12 @@
 ## GeneticOptimization
 This project is a from-scratch build of an genetic algorithm to achieve mathematical optimization.
 
-#### Description
+### Description
 In this project, I want to build tools to input an optimization problem as a text file and use a genetic algorithm to solve for or at least approximate the optimal solution for the given problem. The program should read an input file and parse the contents into a dedicated data structure. Then a population of values for each variable of the program should be created. After those values are evaluated, the next generation of the population will be determined by the results of the previous one, allowing slight mutations. Hopefully, as the generations progress, after some time, an optimal solution or at least an approximation to it should be reached.
 
-#### Input format
+### Input format
 
-The input format for the optimization problem is pretty straight forward. It contains an objective and a number of equations functioning as constraints:
+The input format for the optimization problem is pretty straight forward. It contains an maximizing objective and a number of equations functioning as constraints:
 ```
 objective:
 4x + y

@@ -1,5 +1,9 @@
+#pragma once
 #include <string>
+#include <set>
 #include <map>
+#include <tuple>
+#include <cmath>
 
 enum comparator_type { E, LE, GE };
 static const char *comparator_type_str[] = { "=", "<=", ">=" };
@@ -9,25 +13,29 @@ static const char *operator_type_str[] = { "+", "-" };
 class Node {
     public:
         virtual std::string to_string() = 0;
+        virtual std::set<std::string> getVariables() = 0;
 };
 
 class TermNode : public Node {
     public:
         virtual std::string to_string() = 0;
         virtual double eval(std::map<std::string, double> values) = 0;
+        virtual std::set<std::string> getVariables() = 0;
 };
 
 class AtomNode : public TermNode {
     public:
         virtual std::string to_string() = 0;
         virtual double eval(std::map<std::string, double> values) = 0;
+        virtual std::set<std::string> getVariables() = 0;
 };
 
 class EquationNode : public Node {
     public:
         EquationNode(TermNode* term_1, TermNode* term_2, comparator_type comparator_);
         std::string to_string() override;
-        bool eval(std::map<std::string, double> values);
+        std::tuple<bool, double> eval(std::map<std::string, double> values);
+        std::set<std::string> getVariables() override;
     private:
         TermNode* term_1;
         TermNode* term_2;
@@ -39,6 +47,7 @@ class OperationNode : public TermNode {
         OperationNode(AtomNode* term_1, TermNode* term_2, operator_type operator_);
         std::string to_string() override;
         double eval(std::map<std::string, double> values) override;
+        std::set<std::string> getVariables() override;
     private:
         AtomNode* term_1;
         TermNode* term_2;
@@ -50,6 +59,7 @@ class IdentifierNode : public AtomNode {
         IdentifierNode(std::string name);
         std::string to_string() override;
         double eval(std::map<std::string, double> values) override;
+        std::set<std::string> getVariables() override;
     private:
         std::string name;
 };
@@ -59,6 +69,7 @@ class NumericalNode : public AtomNode {
         NumericalNode(int value);
         std::string to_string() override;
         double eval(std::map<std::string, double> values) override;
+        std::set<std::string> getVariables() override;
     private:
         int value;
 };
@@ -68,6 +79,7 @@ class ConcatNode : public AtomNode {
         ConcatNode(int value, std::string name);
         std::string to_string() override;
         double eval(std::map<std::string, double> values) override;
+        std::set<std::string> getVariables() override;
     private:
         int value;
         std::string name;

@@ -1,3 +1,4 @@
+#pragma once
 #include <list>
 #include <stack>
 #include "lexer.hpp"
