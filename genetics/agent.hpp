@@ -10,7 +10,7 @@ class Agent{
         Agent(std::map<std::string, double> values);
         Agent(Agent* agent, double mutationRate, double mutationRange);
         std::map<std::string, double> getValues();
-        double calculateFitness(Program* program, std::tuple<double, double> objectiveRange);
+        double calculateFitness(Program* program, std::tuple<double, double> objectiveRange, std::list<std::tuple<double, double>> constraintRanges);
         double getFitness();
     private:
         std::map<std::string, double> values;

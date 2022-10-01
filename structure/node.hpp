@@ -40,6 +40,7 @@ class EquationNode : public Node {
         std::string to_string() override;
         std::tuple<bool, double> eval(std::map<std::string, double> values);
         std::set<std::string> getVariables() override;
+        comparator_type getComparator();
     private:
         TermNode* term_1;
         TermNode* term_2;

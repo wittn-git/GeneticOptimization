@@ -5,13 +5,14 @@ Population::Population(int size, Program* program, double mutationRate, double m
     for(int i=0; i<size; i++){
         agents.emplace_back(new Agent(variables));
     }
-    objectiveRange = getObjectiveRange();
+    objectiveRange = program->getObjectiveRange();
+    constraintRanges = program->getConstraintRanges();
 };
 
 void Population::update(){
     double overallFitness = 0;
     for(auto it = agents.begin(); it != agents.end(); ++it){
-        double fitness = (*it)->calculateFitness(program, objectiveRange);
+        double fitness = (*it)->calculateFitness(program, objectiveRange, constraintRanges);
         if(fitness > std::get<0>(best)){
             best = {fitness, (*it)->getValues() };
         }
@@ -44,13 +45,12 @@ Agent* Population::getChild(double overallFitness){
     return nullptr;
 }
 
-std::tuple<double, double> Population::getObjectiveRange(){
-    std::map<std::string, double> mins, maxs;
-    for(auto it = variables.begin(); it != variables.end(); it++){
-        mins[(*it).first] = (*it).second.min;
-        maxs[(*it).first] = (*it).second.max;    
+std::string Population::to_string(){
+    std::string population_string;
+    population_string += "Objective value: " + std::to_string(program->getObjective()->eval(getBest())) + "\n";
+    population_string += "Variables values:\n";
+    for(const auto& elem : getBest()){
+        population_string += elem.first + " " + std::to_string(elem.second) + "\n";
     }
-    double min = program->getObjective()->eval(mins);
-    double max = program->getObjective()->eval(maxs);
-    return { min, std::fabs((max - min)) };
+    return population_string;
 }

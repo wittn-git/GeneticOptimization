@@ -1,9 +1,12 @@
 definitions:
 x: [0,5];
 y: [0,5];
+z: [0,5];
 
 objective:
-x+y;
+x+y+z;
 
 constraints:
-x+y <= 6;
+x + y <= 6;
+2x == y;
+x + y <= z;

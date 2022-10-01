@@ -9,7 +9,7 @@ std::string EquationNode::to_string(){
 std::tuple<bool, double> EquationNode::eval(std::map<std::string, double> values){
     double term_1_value = term_1->eval(values); 
     double term_2_value = term_2->eval(values);
-    bool fulfilled;
+    bool fulfilled = false;
     switch (comparator_){
     case E:
         fulfilled = term_1_value == term_2_value;
@@ -21,7 +21,7 @@ std::tuple<bool, double> EquationNode::eval(std::map<std::string, double> values
         fulfilled = term_1_value <= term_2_value;
         break;
     }
-    return {fulfilled, abs(term_1_value - term_2_value)};
+    return {fulfilled, std::fabs(term_1_value - term_2_value)};
 }
 
 std::set<std::string> EquationNode::getVariables(){
@@ -29,6 +29,10 @@ std::set<std::string> EquationNode::getVariables(){
     std::set<std::string> v2 = term_2->getVariables();
     v1.insert(v2.begin(), v2.end());
     return v1;
+}
+
+comparator_type EquationNode::getComparator(){
+    return comparator_;
 }
 
 OperationNode::OperationNode(AtomNode* term_1, TermNode* term_2, operator_type operator_) : term_1(term_1), term_2(term_2), operator_(operator_) {};

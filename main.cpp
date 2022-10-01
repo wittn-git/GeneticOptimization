@@ -3,10 +3,10 @@
 #include "util/file_util.hpp"
 #include "genetics/population.hpp"
 
-#define epoches 200
+#define epoches 300
 #define populationsize 100
 #define mutationrate 0.05
-#define mutationrange 1
+#define mutationrange 0.2
 
 int main(){
     Parser parser;
@@ -16,12 +16,7 @@ int main(){
     Population population(populationsize, &prog, mutationrate, mutationrange);
     for(int i=0; i<epoches; i++){
         population.update();
-        std::map<std::string, double> best = population.getBest();
-        std::cout << "Objective value: " << prog.getObjective()->eval(best) << "\n" << "Variables values:\n";
-        for(const auto& elem : best){
-            std::cout << elem.first << " " << elem.second << "\n";
-        }
-        std::cout << "\n";
+        std::cout << population.to_string() << "\n";
     }
     return 0;
 }
