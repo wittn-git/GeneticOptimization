@@ -34,7 +34,6 @@ void Tokenbuffer::unmark(){
     unmarkedTokens.pop();
 }
 
-
 void Tokenbuffer::mark(){
     marks.push(lexer->getCursor());
     unmarkedTokens.push(0);

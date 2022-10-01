@@ -37,8 +37,7 @@ double Agent::calculateFitness(Program* program, std::tuple<double, double> obje
             if((*it1)->getComparator() == E){
                 fitness -= 5 * ((std::get<1>(cstr)) / std::get<1>(*it2));
             }else{
-                fitness -= 5 * ((std::get<1>(cstr)) / std::get<1>(*it2));
-                fitness -= 10 / constraints.size();
+                fitness -= 5 * ((std::get<1>(cstr)) / std::get<1>(*it2)) + 10 / constraints.size();
             }
         }
     }
