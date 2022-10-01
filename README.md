@@ -6,7 +6,7 @@ In this project, I want to build tools to input an optimization problem as a tex
 
 ### Input format
 
-The input format for the optimization problem is pretty straight forward. It contains definitions of used variabes, a maximizing objective and a number of equations functioning as constraints:
+The input format for the optimization problem is pretty straight forward. It contains definitions of used variables, a maximizing objective and a number of equations functioning as constraints:
 ```
 definitions:
 x:[0,10];
