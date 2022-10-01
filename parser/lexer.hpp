@@ -35,7 +35,9 @@ class Lexer{
             {"-", MINUS},
             {"\\[", LBRACKET},
             {"\\]", RBRACKET},
-            {",", COMMA}
+            {",", COMMA},
+            {"\\(", LPARENTHESIS},
+            {"\\)", RPARENTHESIS}
     };
 
 };

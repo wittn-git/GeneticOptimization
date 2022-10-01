@@ -24,12 +24,12 @@ class Parser{
         bool matchTerm();
         bool matchEquation();
         bool matchIdentifier();
-        bool matchNumber();
+        bool matchNumerical();
         bool matchConcat();
 
         Tokenbuffer* tokenbuffer;
 
-        std::variant<OperationNode*, EquationNode*, ConcatNode*, IdentifierNode*, NumericalNode*> nodeResult;
+        std::variant<OperationNode*, EquationNode*, IdentifierNode*, NumericalNode*, TermNode*> nodeResult;
         std::tuple<std::string, Range> definitionResult;
         Program* programResult;
 

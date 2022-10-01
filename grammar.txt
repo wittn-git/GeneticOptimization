@@ -2,9 +2,8 @@ P -> definitions:D;objective:T;constraints:S;
 D -> I:[N,N];
 S -> E;S | E;
 E -> T=T | T>=T | T<=T
-T -> O | A
-O -> A+O | A-O
-A -> C | I | N
+T -> O | A | NI
+O -> A+T | A-T
+A -> I | N
 I -> {any identifier}
 N -> {any numerical}
-c -> {any concat}
