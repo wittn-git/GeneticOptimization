@@ -20,6 +20,8 @@ std::tuple<bool, double> EquationNode::eval(std::map<std::string, double> values
     case LE:
         fulfilled = term_1_value <= term_2_value;
         break;
+    default:
+        throw std::invalid_argument("Wrong evaluation of EQUATION.");
     }
     return {fulfilled, std::fabs(term_1_value - term_2_value)};
 }
@@ -35,18 +37,20 @@ comparator_type EquationNode::getComparator(){
     return comparator_;
 }
 
-OperationNode::OperationNode(AtomNode* term_1, TermNode* term_2, operator_type operator_) : term_1(term_1), term_2(term_2), operator_(operator_) {};
+OperationNode::OperationNode(TermNode* term_1, TermNode* term_2, operator_type operator_) : term_1(term_1), term_2(term_2), operator_(operator_) {};
 
 std::string OperationNode::to_string(){
-    return term_1->to_string() + operator_type_str[operator_] + term_2->to_string();
+    return "(" + term_1->to_string() + operator_type_str[operator_] + term_2->to_string() + ")";
 }
 
 double OperationNode::eval(std::map<std::string, double> values){
     switch (operator_){
-    case P:
+    case PL:
         return term_1->eval(values) + term_2->eval(values);
-    case M:
+    case MI:
         return term_1->eval(values) - term_2->eval(values);
+    case MU:
+        return term_1->eval(values) * term_2->eval(values);
     }
     throw std::invalid_argument("Wrong evaluation of Operation.");
 }
@@ -91,18 +95,4 @@ std::set<std::string> NumericalNode::getVariables(){
 
 double NumericalNode::getValue(){
     return value;
-}
-
-ConcatNode::ConcatNode(double value, std::string name) : value(value), name(name) {};
-
-std::string ConcatNode::to_string() {
-    return std::to_string(value) + name;
-}
-
-double ConcatNode::eval(std::map<std::string, double> values){
-    return values[name]*value;
-}
-
-std::set<std::string> ConcatNode::getVariables(){
-    return { name };
 }

@@ -7,8 +7,8 @@
 
 enum comparator_type { E, LE, GE };
 static const char *comparator_type_str[] = { "=", "<=", ">=" };
-enum operator_type { P, M };
-static const char *operator_type_str[] = { "+", "-" };
+enum operator_type { PL, MI, MU, };
+static const char *operator_type_str[] = { "+", "-", "*" };
 
 struct Range{
     double min, max;
@@ -49,12 +49,12 @@ class EquationNode : public Node {
 
 class OperationNode : public TermNode {
     public:
-        OperationNode(AtomNode* term_1, TermNode* term_2, operator_type operator_);
+        OperationNode(TermNode* term_1, TermNode* term_2, operator_type operator_);
         std::string to_string() override;
         double eval(std::map<std::string, double> values) override;
         std::set<std::string> getVariables() override;
     private:
-        AtomNode* term_1;
+        TermNode* term_1;
         TermNode* term_2;
         operator_type operator_;
 };
@@ -79,15 +79,4 @@ class NumericalNode : public AtomNode {
         double getValue();
     private:
         double value;
-};
-
-class ConcatNode : public AtomNode {
-    public:
-        ConcatNode(double value, std::string name);
-        std::string to_string() override;
-        double eval(std::map<std::string, double> values) override;
-        std::set<std::string> getVariables() override;
-    private:
-        double value;
-        std::string name;
 };

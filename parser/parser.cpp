@@ -111,14 +111,14 @@ bool Parser::matchDefinition(){
     if(!matchToken(LBRACKET)){
         return reject();
     }
-    if(!matchNumber()){
+    if(!matchNumerical()){
         return reject();
     }
     NumericalNode* min = get_variant<NumericalNode>(nodeResult);
     if(!matchToken(COMMA)){
         return reject();
     }
-    if(!matchNumber()){
+    if(!matchNumerical()){
         return reject();
     }
     NumericalNode* max = get_variant<NumericalNode>(nodeResult);
@@ -138,7 +138,7 @@ bool Parser::matchDefinition(){
 
 bool Parser::matchTerm(){
     init();
-    if(matchOperation() || matchAtom()){
+    if(matchOperation() || matchConcat() || matchAtom()){
         return accept();
     }
     return reject();
@@ -147,22 +147,22 @@ bool Parser::matchTerm(){
 /*
 
     O:
-        A+A
-        A-A
+        A+T
+        A-T
 
 */
 
 bool Parser::matchOperation(){
     init();
-    if(!matchAtom()){
+    if(!matchAtom() && !matchConcat()){
         return reject();
     }
-    AtomNode* term_1 = get_variant<AtomNode>(nodeResult);
+    TermNode* term_1 = get_variant<TermNode>(nodeResult);
     operator_type operator_;
     if(matchToken(PLUS)){
-        operator_ = P;
+        operator_ = PL;
     }else if(matchToken(MINUS)){
-        operator_ = M;
+        operator_ = MI;
     }else{
         return reject();
     }
@@ -184,7 +184,7 @@ bool Parser::matchOperation(){
 
 bool Parser::matchAtom(){
     init();
-    if(matchConcat() || matchNumber() || matchIdentifier()){
+    if(matchNumerical() || matchIdentifier()){
         return accept();
     }
     return reject();
@@ -243,7 +243,7 @@ bool Parser::matchIdentifier(){
     N:
         {any integer}
 */
-bool Parser::matchNumber(){
+bool Parser::matchNumerical(){
     init();
     if(tokenbuffer->hasNext()){
         Token token = tokenbuffer->next();
@@ -256,24 +256,19 @@ bool Parser::matchNumber(){
 }
 
 /*
-    C:
+    NI:
         {any concat}
 */
 bool Parser::matchConcat(){
     init();
-    if(tokenbuffer->hasNext()){
-        Token token = tokenbuffer->next();
-        if(token.type == NUMERICAL){
-            int value = std::stoi(token.value);
-            if(tokenbuffer->hasNext()){
-                Token token = tokenbuffer->next();
-                if(token.type == IDENTIFIER){
-                    std::string name = token.value;
-                    nodeResult = new ConcatNode(value, name);
-                    return accept();
-                }
-            }
-        }
+    if(!matchNumerical()){
+        return reject();
     }
-    return reject();
+    NumericalNode* term_1 = get_variant<NumericalNode>(nodeResult);
+    if(!matchIdentifier()){
+        return reject();
+    }
+    IdentifierNode* term_2 = get_variant<IdentifierNode>(nodeResult);
+    nodeResult = new OperationNode(term_1, term_2, MU);
+    return accept();
 }
