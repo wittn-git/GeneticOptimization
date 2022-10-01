@@ -41,16 +41,19 @@ Following types of terms are currently supported:
 
 After parsing the problem into a program structure, a genetic algorithm will be used to determine or approximate the optimal solution. For this a population of a given size containing agents will be created. Each of those agents will be initialized with the minimum values of each variable. In each generation, the fitness of these agents will be determine based on the following formula:
 ```
-min     - minimum objective value
-max     - maximum objective value
-n       - number of constraints
-f(i)    - fulfillment if constraint i
-diff(i) - difference in constraint i
-obj     - objective value
+v                       - values of current agent
+min_obj                 - minimum objective value
+max_obj                 - maximum objective value
+obj_range               - max_obj - min_obj
+obj(v)                  - objective value
+min_cstr(i)             - minimum value of constraint i
+max_cstr(i)             - maximum value of constraint i
+cstr_range(i)           - max(i) - min(i)
+cstr_fulfill(i, v)      - fulfillment if constraint i
+cstr_diff(i, v)         - difference in constraint i with values of 
 
-objective_range = abs(max-min)
 
-fitness = 0.1 + (obj * 10) / objective_range + sum(ful(i) * ((diff(i) * 10) / objective_range) * 10)
+fitness = 0.1 + (obj(v) * 10) / objective_range + sum(ful(i) * ((diff(i) / cstr_range(i)) * 10))
 ```
 After that, the best agent will be put in the next generation. The rest of the other population is based on the remaining agent; the higher the fitness of an agent, the higher the probability, that the agent will be put in the next generation. When an agent is put in the next generation, with a given mutation probability, its values will mutate in a given mutation range. The process is repeated for a given number of epoches.
 
